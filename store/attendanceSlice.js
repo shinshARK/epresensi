@@ -16,6 +16,8 @@ const attendanceSlice = createSlice({
   initialState,
   reducers: {
     setStatus: (state, action) => {
+      console.log("set status");
+      console.log(JSON.stringify(action.payload));
       state.status = action.payload.status;
       // Use lastUpdated from payload, which will be NTP time
 
@@ -23,7 +25,7 @@ const attendanceSlice = createSlice({
         state.lastUpdated = action.payload.lastUpdated;
       }
       if (action.payload.isDinas !== undefined) {
-        state.isDinas = action.payload.isDinas;
+        state.isDinas = Boolean(action.payload.isDinas);
       }
       if (action.payload.dinasDescription !== undefined) {
         state.dinasDescription = action.payload.dinasDescription;

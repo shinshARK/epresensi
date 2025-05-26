@@ -11,15 +11,18 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-native-picker/picker": "2.11.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native-stack": "^7.2.0",
     "@reduxjs/toolkit": "^2.5.1",
     "@ruanitto/react-native-ntp-sync": "^1.1.2",
     "axios": "^1.7.9",
+    "date-fns": "^4.1.0",
     "expo": "~53.0.7",
     "expo-app-loading": "^2.1.1",
     "expo-background-fetch": "~13.1.5",
     "expo-checkbox": "~4.1.4",
+    "expo-font": "~13.3.1",
     "expo-linear-gradient": "~14.1.4",
     "expo-local-authentication": "~16.0.4",
     "expo-location": "~18.1.4",
@@ -32,11 +35,10 @@
     "react-native": "0.79.2",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
-    "react-redux": "^9.2.0",
-    "redux-devtools-expo-dev-plugin": "^1.0.0",
-    "redux-persist": "^6.0.0",
     "react-native-svg": "15.11.2",
-    "expo-font": "~13.3.1"
+    "react-redux": "^9.2.0",
+    "redux-devtools-expo-dev-plugin": "^2.0.0",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

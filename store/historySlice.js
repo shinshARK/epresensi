@@ -13,6 +13,10 @@ export const fetchAttendanceHistory = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const historyData = await fetchHistoryFromFirebase(); // Fetch history data
+
+      console.log("thunk fetch history data");
+      // console.log(historyData);
+
       return historyData; // Return the fetched history data
     } catch (error) {
       return rejectWithValue({ error: error.message }); // Reject with error message
@@ -47,6 +51,7 @@ const historySlice = createSlice({
       })
       .addCase(fetchAttendanceHistory.fulfilled, (state, action) => {
         state.loading = "succeeded";
+        // console.log(JSON.stringify(action));
         state.historyData = action.payload; // Update historyData with fetched data
       })
       .addCase(fetchAttendanceHistory.rejected, (state, action) => {

@@ -2,12 +2,28 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Colors } from "../../constants/styles";
 
-const TimelineIndicator = ({ dotColor = Colors.statusColors.checked_in }) => {
+const TimelineIndicator = ({
+  dotColor = Colors.statusColors.checked_in,
+  hideTopLine = false,
+  hideBottomLine = false,
+}) => {
   return (
     <View style={styles.container}>
-      <View style={styles.lineSegment} />
+      {/* Top segment: gray normally, white when “hidden” */}
+      <View
+        style={[
+          styles.lineSegment,
+          hideTopLine && { backgroundColor: "#ffffff" },
+        ]}
+      />
       <View style={[styles.dot, { backgroundColor: dotColor }]} />
-      <View style={styles.lineSegment} />
+      {/* Bottom segment: gray normally, white when “hidden” */}
+      <View
+        style={[
+          styles.lineSegment,
+          hideBottomLine && { backgroundColor: "#ffffff" },
+        ]}
+      />
     </View>
   );
 };

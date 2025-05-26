@@ -10,12 +10,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  Alert,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import {
   login as loginAction,
   signup as signupAction,
 } from "../store/authSlice";
+
+import { LinearGradient } from "expo-linear-gradient";
 
 import { Colors } from "../constants/styles";
 
@@ -35,9 +38,55 @@ const Auth = () => {
     try {
       await dispatch(loginAction({ email, password })).unwrap();
       // navigate or handle success
-    } catch (err) {
-      console.error("Login failed", err);
+    } catch (error) {
+      // console.error("Login failed", err);
       // show error alert
+      let alertTitle = "Login Failed";
+      let alertMessage =
+        "An unexpected error occurred. Please try again later."; // Default message
+
+      // Try to extract the error code. Adjust this based on your actual error object structure.
+      // Common places for error codes: error.code, error.message (if it's the code itself),
+      // or error.payload.code if you used rejectWithValue({ code: '...', ...}) in your thunk.
+      const errorCode =
+        typeof error === "string"
+          ? error
+          : error.code ||
+            (error.payload && error.payload.code) ||
+            error.message;
+
+      console.log(errorCode);
+
+      switch (errorCode) {
+        case "INVALID_EMAIL":
+          alertMessage =
+            "The email address provided is invalid or not supported. Please check the format and try again.";
+          break;
+        case "EMAIL_NOT_FOUND": // If your backend sends a more specific code for this
+        case "INVALID_PASSWORD":
+          alertMessage = "Invalid credentials, wrong email or password";
+          break;
+        case "USER_DISABLED":
+          // This is less common for a new registration attempt unless the email was previously registered and then disabled.
+          alertMessage =
+            "This account is currently disabled. If you believe this is an error, please contact support.";
+          break;
+
+        default:
+          // For unhandled specific codes or if errorCode is null/undefined,
+          // the default "An unexpected error occurred..." message will be used.
+          // You might also check if 'error.message' contains a somewhat user-friendly string from backend for other errors:
+          if (
+            typeof error.message === "string" &&
+            error.message !== errorCode &&
+            errorCode !== null
+          ) {
+            // Avoid showing generic "[object Object]" or the code again
+            // alertMessage = error.message; // Uncomment this cautiously: only if you trust your backend to send user-friendly messages.
+          }
+          break;
+      }
+      Alert.alert(alertTitle, alertMessage);
     }
   };
 
@@ -49,12 +98,66 @@ const Auth = () => {
       password,
       confirmPassword,
     });
+
+    if (!isLogin && password !== confirmPassword) {
+      Alert.alert("Registration Failed", "Passwords do not match.");
+      return;
+    }
+    if (!isLogin && email !== confirmEmail) {
+      // Only check confirmEmail if in signup mode and it's relevant
+      Alert.alert("Registration Failed", "Email addresses do not match.");
+      return;
+    }
+
     try {
       await dispatch(signupAction({ email, password })).unwrap();
       // navigate or handle success
-    } catch (err) {
-      console.error("Registration failed", err);
+    } catch (error) {
+      // console.error("Registration failed", err);
+      // Alert.alert("Registration failed", err);
+
       // show error alert
+      let alertTitle = "Registration Failed";
+      let alertMessage =
+        "An unexpected error occurred. Please try again later."; // Default message
+
+      // Try to extract the error code. Adjust this based on your actual error object structure.
+      // Common places for error codes: error.code, error.message (if it's the code itself),
+      // or error.payload.code if you used rejectWithValue({ code: '...', ...}) in your thunk.
+      console.log(error);
+      const errorCode =
+        typeof error === "string"
+          ? error
+          : error.code ||
+            (error.payload && error.payload.code) ||
+            error.message;
+
+      console.log(errorCode);
+
+      switch (errorCode) {
+        case "INVALID_EMAIL":
+          alertMessage =
+            "The email address provided is invalid or not supported. Please check the format and try again.";
+          break;
+        case "EMAIL_EXISTS": // If your backend sends a more specific code for this
+        case "INVALID_PASSWORD":
+          alertMessage = "Invalid credentials, wrong email or password";
+          break;
+        default:
+          // For unhandled specific codes or if errorCode is null/undefined,
+          // the default "An unexpected error occurred..." message will be used.
+          // You might also check if 'error.message' contains a somewhat user-friendly string from backend for other errors:
+          if (
+            typeof error.message === "string" &&
+            error.message !== errorCode &&
+            errorCode !== null
+          ) {
+            // Avoid showing generic "[object Object]" or the code again
+            // alertMessage = error.message; // Uncomment this cautiously: only if you trust your backend to send user-friendly messages.
+          }
+          break;
+      }
+      Alert.alert(alertTitle, alertMessage);
     }
   };
 
@@ -78,7 +181,8 @@ const Auth = () => {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         // enabled={true}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={-50}
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
         style={styles.inner}
       >
         {/* Logo section stays fixed at top */}
@@ -94,6 +198,20 @@ const Auth = () => {
         {/* Form section at bottom with enough space for register fields */}
         <View style={styles.half}>
           <View style={styles.formContainer}>
+            {Platform.OS === "android" && (
+              <LinearGradient
+                colors={["transparent", "rgba(0,0,0,0.15)"]}
+                style={{
+                  position: "absolute",
+                  top: 0, // Or a slight negative offset if you want it "above" the border
+                  left: 0,
+                  right: 0,
+                  height: 10, // Adjust height of the shadow
+                  borderTopLeftRadius: 20, // Match parent
+                  borderTopRightRadius: 20, // Match parent
+                }}
+              />
+            )}
             <Text style={styles.title}>
               {isLogin ? "Login e-Presensi" : "Register e-Presensi"}
             </Text>
@@ -199,7 +317,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowOffset: { width: 0, height: -10 },
     shadowRadius: 4,
-    elevation: 8,
+    // borderTopWidth: 1,
+    // elevation: 8,
   },
   title: {
     fontSize: 24,

@@ -1,7 +1,7 @@
 // File: /utils/firebase/rtdb/historyApi.js
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
 import { firebaseConfig } from "../../../constants/firebase";
+import api from "../api";
 
 const databaseURL = firebaseConfig.databaseURL;
 
@@ -14,13 +14,13 @@ export const fetchHistoryFromFirebase = async () => {
     const endpointURL = `${databaseURL}/users/${userEmail}/attendanceData.json?auth=${token}`; // UPDATED PATH
     // console.log(endpointURL);
 
-    const historyResponse = await axios.get(endpointURL, {
+    const historyResponse = await api.get(endpointURL, {
       headers: { "Content-Type": "application/json" },
     });
     // console.log(JSON.stringify(historyResponse));
 
     const firebaseHistoryData = historyResponse.data; // Raw data from Firebase
-    console.log("Raw history data from Firebase:", firebaseHistoryData); // Log raw data
+    // console.log("Raw history data from Firebase:", firebaseHistoryData); // Log raw data
 
     // Transform Firebase object into an array
     const historyArray = firebaseHistoryData
@@ -30,7 +30,7 @@ export const fetchHistoryFromFirebase = async () => {
         }))
       : []; // Handle case where firebaseHistoryData is null (no history)
 
-    console.log("Transformed history array:", historyArray); // Log transformed array
+    // console.log("Transformed history array:", historyArray); // Log transformed array
     return historyArray.reverse(); // Return the transformed array
   } catch (error) {
     console.error("Error fetching attendance history data:", error);

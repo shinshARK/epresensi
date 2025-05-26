@@ -5,13 +5,11 @@ import CustomTextTest from "../components/ui/CustomTextTest";
 const Dashboard = () => {
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text>Header Line 1</Text>
         <Text>Header Line 2</Text>
       </View>
 
-      {/* Two side-by-side boxes */}
       <View style={styles.row}>
         <View style={styles.box}>
           <Text>Box 1</Text>
@@ -21,12 +19,10 @@ const Dashboard = () => {
         </View>
       </View>
 
-      {/* Middle block */}
       <View style={styles.middleBlock}>
         <Text>Middle Block</Text>
       </View>
 
-      {/* Bottom block */}
       <View style={styles.bottomBlock}>
         <CustomTextTest></CustomTextTest>
       </View>

@@ -6,12 +6,17 @@ export const signup = createAsyncThunk(
   "auth/signup",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const token = await authenticate("signUp", email, password);
+      const { idToken, refreshToken } = await authenticate(
+        "signUp",
+        email,
+        password
+      );
 
-      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("token", idToken);
+      await AsyncStorage.setItem("refreshToken", refreshToken);
       await AsyncStorage.setItem("email", email);
 
-      return token;
+      return idToken;
     } catch (error) {
       return rejectWithValue(
         error.response.data.error.message || "Signup failed"
@@ -24,12 +29,17 @@ export const login = createAsyncThunk(
   "auth/login",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const token = await authenticate("signInWithPassword", email, password);
+      const { idToken, refreshToken } = await authenticate(
+        "signInWithPassword",
+        email,
+        password
+      );
 
-      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("token", idToken);
+      await AsyncStorage.setItem("refreshToken", refreshToken);
       await AsyncStorage.setItem("email", email);
 
-      return token;
+      return idToken;
     } catch (error) {
       return rejectWithValue(
         error.response.data.error.message || "Login failed"
@@ -58,7 +68,8 @@ export const fetchStoredToken = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const storedToken = await AsyncStorage.getItem("token");
-      return storedToken;
+      const storedEmail = await AsyncStorage.getItem("email");
+      return { token: storedToken, email: storedEmail };
     } catch (error) {
       return rejectWithValue(error.message || "Could not fetch token");
     }
@@ -69,6 +80,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState: {
     token: null,
+    email: null,
     isAuthenticated: false,
     isAuthenticating: false,
     error: null,
@@ -88,6 +100,7 @@ const authSlice = createSlice({
       state.isAuthenticating = false;
       state.isAuthenticated = true;
       state.token = action.payload;
+      state.email = action.meta.arg.email;
       state.error = null;
     });
     builder.addCase(signup.rejected, (state, action) => {
@@ -105,6 +118,7 @@ const authSlice = createSlice({
       state.isAuthenticating = false;
       state.isAuthenticated = true;
       state.token = action.payload;
+      state.email = action.meta.arg.email;
       state.error = null;
     });
     builder.addCase(login.rejected, (state, action) => {
@@ -138,6 +152,7 @@ const authSlice = createSlice({
     builder.addCase(fetchStoredToken.fulfilled, (state, action) => {
       state.isAuthenticating = false;
       state.token = action.payload || null; // handle null token
+      state.email = action.payload.email || null;
       state.isAuthenticated = !!action.payload;
       state.error = null;
     });

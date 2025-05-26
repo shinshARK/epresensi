@@ -8,6 +8,7 @@ export const Colors = {
   statusColors: {
     checking_in: "",
     checked_in: "rgba(82, 189, 148, 1)",
+    // checked_in: "rgba(220, 242, 234, 1)",
     checking_out: "rgba(205, 171, 30, 1)",
     checked_out: "",
     dinas: "rgba(51, 102, 255, 1)",

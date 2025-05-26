@@ -35,3 +35,19 @@ export function ellipsizeString(str, maxLength) {
     return str;
   }
 }
+
+export function getLocalTimeFromISO(isoString) {
+  if (!isoString || isoString === "-") {
+    return "-"; // Handle empty or placeholder values
+  }
+
+  const dateObj = new Date(isoString); // Parse the ISO string into a Date object
+
+  // Use toLocaleTimeString to get the local time string.
+  // You can customize the options for format (e.g., no seconds, 24-hour format).
+  return dateObj.toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false, // Use 24-hour format (e.g., 14:30 instead of 02:30 PM)
+  });
+}

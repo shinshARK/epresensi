@@ -8,30 +8,68 @@ import {
 import Text from "./CustomText";
 import TimelineIndicator from "./TimelineIndicator";
 import { Colors } from "../../constants/styles";
-import { ellipsizeString } from "../../utils/strings";
+import { ellipsizeString, getLocalTimeFromISO } from "../../utils/strings";
+import Icon from "./CustomIcon";
+
+const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
 const HistoryItem = ({
   color = Colors.statusColors.checked_in,
-  day = "Sen",
-  date = "05",
-  status = "Hadir",
+  date = "2025-01-05",
+  isDinas = false,
+  dinasDescription = "",
   address = "Gedung utama Kementrian Kelautan dan Perikanan",
-  time = "Terekam pada pukul 08.03",
+  checkin_time = "-",
+  checkout_time = "-",
+  time = "08:00",
+  hideTopLine = false,
+  hideBottomLine = false,
+  maxLength = 50,
+  // out
 }) => {
-  address = ellipsizeString(address);
+  // date = "2025-01-05";
+  address = ellipsizeString(address, maxLength);
+  let status = isDinas ? "Perjalanan Dinas" : "Hadir";
+
+  // color = "rgba(82, 189, 148, 1)";
+
+  let text = address;
+  if (isDinas) {
+    color = Colors.statusColors.dinas;
+    text = dinasDescription;
+  }
+
+  if (checkin_time && checkin_time != "-") {
+    checkin_time = getLocalTimeFromISO(checkin_time); // Gets "09:20"
+  }
+
+  if (checkout_time && checkout_time != "-") {
+    checkout_time = getLocalTimeFromISO(checkout_time); // Gets "09:20"
+  }
+
+  let day = HARI[new Date(date).getDay()];
   return (
     <View style={styles.container}>
       <View style={[styles.box, styles.leftBox]}>
-        <TimelineIndicator dotColor={color} />
+        <TimelineIndicator
+          dotColor={color}
+          hideTopLine={hideTopLine}
+          hideBottomLine={hideBottomLine}
+        />
         <View style={[styles.box, styles.dateBox]}>
           <Text>{day}</Text>
-          <Text>{date}</Text>
+          <Text>{date.split("-")[2]}</Text>
         </View>
       </View>
       <View style={[styles.box, styles.historyBox]}>
         <RNText style={[styles.statusText, { color }]}>{status}</RNText>
-        <Text style={styles.addressText}>{address}</Text>
-        <Text style={styles.timeText}>Terekam pada pukul {time}</Text>
+        <Text style={styles.addressText}>{text}</Text>
+        <View style={styles.timeBox}>
+          <Icon name="check-in" size={12} color="rgba(0, 0, 0, 0.25)" />
+          <Text style={styles.timeText}> {checkin_time} -</Text>
+          <Icon name="check-out" size={12} color="rgba(0, 0, 0, 0.25)" />
+          <Text style={styles.timeText}> {checkout_time}</Text>
+        </View>
       </View>
     </View>
   );
@@ -53,11 +91,12 @@ const styles = StyleSheet.create({
   dateBox: {
     flex: 3,
     justifyContent: "center",
-    marginLeft: 10,
+    marginLeft: 8,
     // borderWidth: 1,
     // alignItems: "center",
   },
   historyBox: {
+    // borderWidth: 1,
     flex: 4,
     padding: 8,
   },
@@ -73,6 +112,10 @@ const styles = StyleSheet.create({
   addressText: {
     fontSize: 12,
     color: "rgba(0, 0, 0, 0.5)",
+  },
+  timeBox: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   timeText: {
     fontSize: 12,

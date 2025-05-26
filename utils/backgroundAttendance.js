@@ -24,7 +24,7 @@ export const syncNTPTime = async () => {
   try {
     await ntpSyncInstance.syncTime();
     const syncedTime = ntpSyncInstance.getTime();
-    console.log(`time: ${syncedTime}`);
+    console.log(`time: ${new Date(syncedTime).toLocaleTimeString()}`);
     store.dispatch(setNtpTime({ ntpTime: syncedTime })); // Dispatch action to update timeSlice
     console.log(
       `[NTP Sync] NTP Time synced and updated in Redux: ${syncedTime}`
@@ -70,7 +70,7 @@ export const performAttendanceCheck = async () => {
       newStatus = AttendanceStatus.CHECKING_IN;
     } else if (
       currentStatus === AttendanceStatus.CHECKED_IN &&
-      hour >= 14 &&
+      hour >= 9 &&
       hour < 20
     ) {
       newStatus = AttendanceStatus.CHECKING_OUT;

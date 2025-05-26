@@ -28,8 +28,13 @@ import { useCallback, useEffect, useState } from "react";
 // redux
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { resetAllStates, store } from "./store";
-import { logout as logoutAction, fetchStoredToken } from "./store/authSlice";
+import {
+  logout as logoutAction,
+  fetchStoredToken,
+  setAuthToken,
+} from "./store/authSlice";
 import Icon from "./components/ui/CustomIcon";
+import { refreshIdToken } from "./utils/firebase/auth/authApi";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -82,18 +87,18 @@ function AttendanceBottomTabs() {
           },
           headerShadowVisible: false,
           headerTitle: "",
-          headerRight: () => (
-            <View style={{ marginRight: 16 }}>
-              {/* Adjust the value (16) as needed */}
-              <IconButton
-                icon="exit"
-                color="white"
-                size={24}
-                onPress={logoutHandler}
-                // No need to pass style prop to IconButton here
-              />
-            </View>
-          ),
+          // headerRight: () => (
+          //   <View style={{ marginRight: 16 }}>
+          //     {/* Adjust the value (16) as needed */}
+          //     <IconButton
+          //       icon="exit"
+          //       color="white"
+          //       size={24}
+          //       onPress={logoutHandler}
+          //       // No need to pass style prop to IconButton here
+          //     />
+          //   </View>
+          // ),
         }}
       />
       <BottomTabs.Screen
@@ -169,6 +174,21 @@ function Navigation() {
 function Root() {
   const [isTryingLogin, setIsTryingLogin] = useState(true);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const refreshTokenInterval = setInterval(async () => {
+      const storedRefreshToken = await AsyncStorage.getItem("refreshToken");
+      if (storedRefreshToken) {
+        const { idToken: newToken, refreshToken: newRefresh } =
+          await refreshIdToken(storedRefreshToken);
+        await AsyncStorage.setItem("token", newToken);
+        await AsyncStorage.setItem("refreshToken", newRefresh);
+        dispatch(setAuthToken(newToken));
+      }
+    }, 50 * 60 * 1000); // every 50 minutes
+
+    return () => clearInterval(refreshTokenInterval);
+  }, []);
 
   useEffect(() => {
     dispatch(fetchStoredToken()).then(() => {

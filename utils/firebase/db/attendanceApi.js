@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios"; // Import axios
 import { firebaseConfig } from "../../../constants/firebase";
 import { store } from "../../../store";
 import { syncNTPTime } from "../../backgroundAttendance";
+import api from "../api";
 
 // const databaseURL = firebaseConfig.databaseURL; // Extract databaseURL for REST API calls
 
@@ -26,8 +26,8 @@ export const updateCurrentDayAttendanceStatus = async (
     const endpointURL = `${firebaseConfig.databaseURL}/users/${userEmail}/attendanceData/${date}.json?auth=${token}`;
     // console.log(endpointURL);
 
-    const response = await axios.put(endpointURL, attendanceData, {
-      // Use axios.put
+    const response = await api.put(endpointURL, attendanceData, {
+      // Use api.put
       headers: {
         "Content-Type": "application/json",
       },
@@ -66,7 +66,7 @@ export const fetchCurrentDayAttendance = async (email, token) => {
     // const endpointURL = `${firebaseConfig.databaseURL}/attendanceData/${formattedEmail}/${today}.json?auth=${token}`;
     const endpointURL = `${firebaseConfig.databaseURL}/users/${formattedEmail}/attendanceData/${today}.json?auth=${token}`;
 
-    const attendanceResponse = await axios.get(endpointURL, {
+    const attendanceResponse = await api.get(endpointURL, {
       headers: { "Content-Type": "application/json" },
     });
 
