@@ -1,10 +1,11 @@
 // ui
 import { StatusBar } from "expo-status-bar";
-import { AppState, StyleSheet, Text, View } from "react-native";
+import { AppState, StyleSheet, Text, View, Alert } from "react-native"; // <--- Add Alert
 import AppLoading from "expo-app-loading";
 import { Colors } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
 import * as Font from "expo-font";
+import * as Device from "expo-device"; // <--- Import expo-device
 
 // icons
 import { Ionicons } from "@expo/vector-icons";
@@ -36,7 +37,7 @@ import {
 import Icon from "./components/ui/CustomIcon";
 import { refreshIdToken } from "./utils/firebase/auth/authApi";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ScreenOrientation from "expo-screen-orientation"; // <<< IMPORT THIS
+import * as ScreenOrientation from "expo-screen-orientation";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -46,14 +47,9 @@ function AuthStack() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        // headerStyle: { backgroundColor: Colors.primary500 },
-        // headerTintColor: "white",
-        // contentStyle: { backgroundColor: Colors.primary100 },
       }}
     >
       <Stack.Screen name="Auth" component={Auth} />
-      {/* <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Register" component={Register} /> */}
     </Stack.Navigator>
   );
 }
@@ -61,17 +57,17 @@ function AuthStack() {
 function AttendanceBottomTabs() {
   const dispatch = useDispatch();
   const logoutHandler = useCallback(() => {
-    dispatch(logoutAction()); // Then dispatch logoutAction
-    dispatch(resetAllStates()); // Dispatch resetAllStates FIRST
-  }, [dispatch]); // Added `navigation` to dependency array
+    dispatch(logoutAction());
+    dispatch(resetAllStates());
+  }, [dispatch]);
 
   return (
     <BottomTabs.Navigator
       screenOptions={({}) => ({
-        tabBarActiveTintColor: "rgba(0, 0, 0, 0.75)", // Set the color for the active tab icon and label
-        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.50)", // Set the color for inactive tab icons and labels
+        tabBarActiveTintColor: "rgba(0, 0, 0, 0.75)",
+        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.50)",
         sceneStyle: {
-          backgroundColor: "white", // Replace with the color you want
+          backgroundColor: "white",
         },
       })}
     >
@@ -82,25 +78,12 @@ function AttendanceBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home-line" color={color} size={size} />
           ),
-          // headerShown: false,
           headerStyle: {
             backgroundColor: Colors.primary300,
             height: 60,
           },
           headerShadowVisible: false,
           headerTitle: "",
-          // headerRight: () => (
-          //   <View style={{ marginRight: 16 }}>
-          //     {/* Adjust the value (16) as needed */}
-          //     <IconButton
-          //       icon="exit"
-          //       color="white"
-          //       size={24}
-          //       onPress={logoutHandler}
-          //       // No need to pass style prop to IconButton here
-          //     />
-          //   </View>
-          // ),
         }}
       />
       <BottomTabs.Screen
@@ -113,9 +96,7 @@ function AttendanceBottomTabs() {
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontWeight: "bold",
-            fontSize: 16, // <--- Set the desired font size here
-            // You can add other text styles like fontFamily, color (though headerTintColor often handles color)
-            // color: 'white',
+            fontSize: 16,
             fontFamily: "sans-serif",
           },
         }}
@@ -149,22 +130,17 @@ function AuthenticatedStack() {
         headerStyle: { backgroundColor: Colors.primary500 },
         headerTintColor: "white",
         contentStyle: { backgroundColor: Colors.primary100 },
-        headerShown: false, // Hide header for the entire AuthenticatedStack as tabs will have their own headers if needed
+        headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="AttendanceTabs" // Directly render AttendanceBottomTabs
-        component={AttendanceBottomTabs}
-      />
+      <Stack.Screen name="AttendanceTabs" component={AttendanceBottomTabs} />
     </Stack.Navigator>
   );
 }
 
 function Navigation() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
   console.log(`is authenticated? ${isAuthenticated}`);
-
   return (
     <NavigationContainer>
       {!isAuthenticated && <AuthStack />}
@@ -190,7 +166,7 @@ function Root() {
     }, 50 * 60 * 1000); // every 50 minutes
 
     return () => clearInterval(refreshTokenInterval);
-  }, []);
+  }, [dispatch]); // <--- Added dispatch to dependency array for consistency
 
   useEffect(() => {
     dispatch(fetchStoredToken()).then(() => {
@@ -207,6 +183,43 @@ function Root() {
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [isDeviceSecure, setIsDeviceSecure] = useState(null); // null: checking, true: secure, false: compromised
+
+  // ---- START: Root/Jailbreak Check useEffect ----
+  useEffect(() => {
+    const checkDeviceSecurity = async () => {
+      try {
+        const isRooted = await Device.isRootedExperimentalAsync();
+        if (isRooted) {
+          console.warn("Device is rooted/jailbroken.");
+          Alert.alert(
+            "Device Compromised",
+            "This application cannot run on a rooted or jailbroken device for security reasons. Please use a secure device.",
+            [{ text: "OK", onPress: () => {} }] // You might want to exit the app here: BackHandler.exitApp() on Android
+            // or prevent further navigation.
+          );
+          setIsDeviceSecure(false);
+          // Depending on your app's policy, you might want to:
+          // 1. Prevent rendering the rest of the app.
+          // 2. Log this event to your server.
+          // 3. For Android, you could use `BackHandler.exitApp();` after the alert.
+        } else {
+          console.log("Device is not rooted/jailbroken.");
+          setIsDeviceSecure(true);
+        }
+      } catch (error) {
+        console.error("Failed to check device security:", error);
+        Alert.alert(
+          "Security Check Failed",
+          "Could not verify device security. For your protection, some features might be limited or the app may not run correctly."
+        );
+        setIsDeviceSecure(false); // Treat as compromised if check fails
+      }
+    };
+
+    checkDeviceSecurity();
+  }, []); // Empty dependency array: run once on mount
+  // ---- END: Root/Jailbreak Check useEffect ----
 
   // ---- START: Screen Orientation Lock useEffect ----
   useEffect(() => {
@@ -221,9 +234,8 @@ export default function App() {
       }
     };
 
-    lockOrientation(); // Attempt to lock when the App component mounts
+    lockOrientation();
 
-    // Add a listener to re-apply the lock when the app comes to the foreground
     const subscription = AppState.addEventListener("change", (nextAppState) => {
       if (nextAppState === "active") {
         console.log("App is active, re-locking orientation to portrait.");
@@ -231,14 +243,10 @@ export default function App() {
       }
     });
 
-    // Clean up the subscription when the component unmounts
     return () => {
       subscription.remove();
-      // You might consider unlocking if your app ever needs other orientations,
-      // but for an "always portrait" app, this is typically not needed.
-      // ScreenOrientation.unlockAsync();
     };
-  }, []); // Empty dependency array ensures this runs once on mount and cleans up on unmount
+  }, []);
   // ---- END: Screen Orientation Lock useEffect ----
 
   useEffect(() => {
@@ -269,8 +277,31 @@ export default function App() {
     loadFonts();
   }, []);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || isDeviceSecure === null) {
+    // <--- Also wait for device security check
     return <AppLoading />;
+  }
+
+  if (isDeviceSecure === false) {
+    // Optionally, render a specific "Device Compromised" screen instead of AppLoading or null
+    // For now, AppLoading will show until the alert is dismissed, then it might show a blank screen
+    // or the app might crash depending on how you handle navigation after the alert.
+    // A dedicated screen is a better user experience.
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 20,
+        }}
+      >
+        <Text style={{ textAlign: "center", fontSize: 16, color: "red" }}>
+          This application cannot run on a rooted or jailbroken device for
+          security reasons.
+        </Text>
+      </View>
+    );
   }
 
   return (
@@ -282,11 +313,3 @@ export default function App() {
     </>
   );
 }
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "white",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
