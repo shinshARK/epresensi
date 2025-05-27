@@ -1,0 +1,399 @@
+{
+  "users": {
+    "haiya(at)mail(dot)com": {
+      "attendanceData": {
+        "2025-04-01": {
+          "checkInTime": "2025-04-01T09:20:00.000Z",
+          "checkOutTime": "2025-04-01T16:50:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-01T16:50:00.000Z",
+          "status": 3
+        },
+        "2025-04-02": {
+          "checkInTime": "2025-04-02T08:55:00.000Z",
+          "dinasDescription": "Presentasi internal",
+          "isDinas": true,
+          "lastUpdated": "2025-04-02T08:55:00.000Z",
+          "status": 2
+        },
+        "2025-04-03": {
+          "checkInTime": "2025-04-03T09:00:00.000Z",
+          "checkOutTime": "2025-04-03T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-03T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-04-04": {
+          "checkInTime": "2025-04-04T08:30:00.000Z",
+          "checkOutTime": "2025-04-04T17:40:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-04T17:40:00.000Z",
+          "status": 3
+        },
+        "2025-04-07": {
+          "checkInTime": "2025-04-07T00:00:00.000Z",
+          "dinasDescription": "Cuti Bersama Idul Fitri",
+          "isDinas": false,
+          "lastUpdated": "2025-04-07T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-04-08": {
+          "checkInTime": "2025-04-08T00:00:00.000Z",
+          "dinasDescription": "Cuti Bersama Idul Fitri",
+          "isDinas": false,
+          "lastUpdated": "2025-04-08T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-04-09": {
+          "checkInTime": "2025-04-09T00:00:00.000Z",
+          "dinasDescription": "Idul Fitri",
+          "isDinas": false,
+          "lastUpdated": "2025-04-09T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-04-10": {
+          "checkInTime": "2025-04-10T00:00:00.000Z",
+          "dinasDescription": "Idul Fitri",
+          "isDinas": false,
+          "lastUpdated": "2025-04-10T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-04-11": {
+          "checkInTime": "2025-04-11T09:10:00.000Z",
+          "checkOutTime": "2025-04-11T16:55:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-11T16:55:00.000Z",
+          "status": 3
+        },
+        "2025-04-14": {
+          "checkInTime": "2025-04-14T09:00:00.000Z",
+          "checkOutTime": "2025-04-14T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-14T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-04-15": {
+          "checkInTime": "2025-04-15T08:50:00.000Z",
+          "checkOutTime": "2025-04-15T17:10:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-15T17:10:00.000Z",
+          "status": 3
+        },
+        "2025-04-16": {
+          "checkInTime": "2025-04-16T09:30:00.000Z",
+          "dinasDescription": "Meeting klien Jakarta",
+          "isDinas": true,
+          "lastUpdated": "2025-04-16T09:30:00.000Z",
+          "status": 2
+        },
+        "2025-04-17": {
+          "checkInTime": "2025-04-17T09:00:00.000Z",
+          "checkOutTime": "2025-04-17T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-17T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-04-18": {
+          "checkInTime": "2025-04-18T08:45:00.000Z",
+          "checkOutTime": "2025-04-18T17:20:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-18T17:20:00.000Z",
+          "status": 3
+        },
+        "2025-04-21": {
+          "checkInTime": "2025-04-21T09:00:00.000Z",
+          "checkOutTime": "2025-04-21T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-21T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-04-22": {
+          "checkInTime": "2025-04-22T09:10:00.000Z",
+          "checkOutTime": "2025-04-22T16:50:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-22T16:50:00.000Z",
+          "status": 3
+        },
+        "2025-04-23": {
+          "checkInTime": "2025-04-23T08:55:00.000Z",
+          "dinasDescription": "Project A site visit",
+          "isDinas": true,
+          "lastUpdated": "2025-04-23T08:55:00.000Z",
+          "status": 2
+        },
+        "2025-04-24": {
+          "checkInTime": "2025-04-24T09:00:00.000Z",
+          "checkOutTime": "2025-04-24T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-24T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-04-25": {
+          "checkInTime": "2025-04-25T08:30:20.000Z",
+          "checkOutTime": "2025-04-25T17:30:15.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-25T17:30:15.000Z",
+          "status": 3
+        },
+        "2025-04-28": {
+          "checkInTime": "2025-04-28T09:15:00.000Z",
+          "checkOutTime": "2025-04-28T16:45:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-28T16:45:00.000Z",
+          "status": 3
+        },
+        "2025-04-29": {
+          "checkInTime": "2025-04-29T08:50:01.000Z",
+          "dinasDescription": "Rapat di kantor pusat",
+          "isDinas": true,
+          "lastUpdated": "2025-04-29T08:50:01.000Z",
+          "status": 2
+        },
+        "2025-04-30": {
+          "checkInTime": "2025-04-30T09:05:12.345Z",
+          "checkOutTime": "2025-04-30T17:10:45.678Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-04-30T17:10:45.678Z",
+          "status": 3
+        },
+        "2025-05-01": {
+          "checkInTime": "2025-05-01T00:00:00.000Z",
+          "dinasDescription": "Hari Buruh",
+          "isDinas": false,
+          "lastUpdated": "2025-05-01T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-05-02": {
+          "checkInTime": "2025-05-02T09:25:00.000Z",
+          "checkOutTime": "2025-05-02T16:40:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-02T16:40:00.000Z",
+          "status": 3
+        },
+        "2025-05-05": {
+          "checkInTime": "2025-05-05T08:50:00.000Z",
+          "checkOutTime": "2025-05-05T17:05:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-05T17:05:00.000Z",
+          "status": 3
+        },
+        "2025-05-06": {
+          "checkInTime": "2025-05-06T09:15:00.000Z",
+          "dinasDescription": "Pelatihan internal",
+          "isDinas": true,
+          "lastUpdated": "2025-05-06T09:15:00.000Z",
+          "status": 2
+        },
+        "2025-05-07": {
+          "checkInTime": "2025-05-07T09:00:00.000Z",
+          "checkOutTime": "2025-05-07T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-07T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-05-08": {
+          "checkInTime": "2025-05-08T08:45:00.000Z",
+          "checkOutTime": "2025-05-08T17:30:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-08T17:30:00.000Z",
+          "status": 3
+        },
+        "2025-05-09": {
+          "checkInTime": "2025-05-09T00:00:00.000Z",
+          "dinasDescription": "Kenaikan Isa Al Masih",
+          "isDinas": false,
+          "lastUpdated": "2025-05-09T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-05-12": {
+          "checkInTime": "2025-05-12T08:50:00.000Z",
+          "checkOutTime": "2025-05-12T17:00:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-12T17:00:00.000Z",
+          "status": 3
+        },
+        "2025-05-13": {
+          "checkInTime": "2025-05-13T00:00:00.000Z",
+          "dinasDescription": "Cuti Bersama",
+          "isDinas": false,
+          "lastUpdated": "2025-05-13T00:00:00.000Z",
+          "status": 0
+        },
+        "2025-05-14": {
+          "checkInTime": "2025-05-14T09:00:00.000Z",
+          "checkOutTime": "2025-05-14T17:15:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-14T17:15:00.000Z",
+          "status": 3
+        },
+        "2025-05-15": {
+          "checkInTime": "2025-05-15T08:40:00.000Z",
+          "dinasDescription": "Perjalanan dinas Semarang",
+          "isDinas": true,
+          "lastUpdated": "2025-05-15T08:40:00.000Z",
+          "status": 2
+        },
+        "2025-05-16": {
+          "checkInTime": "2025-05-16T09:10:00.000Z",
+          "checkOutTime": "2025-05-16T16:50:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-16T16:50:00.000Z",
+          "status": 3
+        },
+        "2025-05-19": {
+          "checkInTime": "2025-05-19T08:55:00.000Z",
+          "checkOutTime": "2025-05-19T17:05:00.000Z",
+          "dinasDescription": "",
+          "isDinas": false,
+          "lastUpdated": "2025-05-19T17:05:00.000Z",
+          "status": 3
+        },
+        "2025-05-20": {
+          "checkInTime": "2025-05-20T09:43:04.107Z",
+          "dinasDescription": "Rapat eksternal",
+          "isDinas": true,
+          "lastUpdated": "2025-05-20T09:43:04.107Z",
+          "status": 2
+        },
+        "2025-05-21": {
+          "checkInTime": "2025-05-21T10:01:53.484Z",
+          "dinasDescription": "Kunjungan vendor",
+          "isDinas": true,
+          "lastUpdated": "2025-05-21T10:01:53.484Z",
+          "status": 2
+        },
+        "2025-05-22": {
+          "checkInTime": "2025-05-22T08:37:13.375Z",
+          "isDinas": false,
+          "lastUpdated": "2025-05-22T08:37:13.375Z",
+          "status": 2
+        },
+        "2025-05-23": {
+          "checkInTime": "2025-05-23T08:53:15.857Z",
+          "dinasDescription": "jalan jalan",
+          "isDinas": true,
+          "lastUpdated": "2025-05-23T08:53:15.857Z",
+          "status": 2
+        },
+        "2025-05-26": {
+          "checkInTime": "2025-05-26T07:41:50.482Z",
+          "checkOutTime": "2025-05-26T09:13:59.174Z",
+          "isDinas": false,
+          "lastUpdated": "2025-05-26T09:13:59.174Z",
+          "status": 3
+        }
+      },
+      "unit_kerja": {
+        "alamat": "Jl. Cipedes Atas No.78, Gegerkalong, Kec. Sukasari, Kota Bandung, Jawa Barat 40152",
+        "latitude": -6.872868773290025,
+        "longitude": 107.59036591779108,
+        "nama_unit_kerja": "ARM"
+      }
+    },
+    "presensi(at)mail(dot)com": {
+      "attendanceData": {
+        "2025-02-25": {
+          "checkInTime": "2025-02-25T02:58:20.781Z",
+          "checkOutTime": "2025-02-25T02:59:09.636Z",
+          "dinasDescription": "Test Dinas Luar Kota",
+          "isDinas": true,
+          "lastUpdated": "2025-02-25T02:59:09.636Z",
+          "status": 3
+        },
+        "2025-02-26": {
+          "checkInTime": "2025-02-26T06:06:10.709Z",
+          "checkOutTime": "2025-02-26T06:06:28.599Z",
+          "dinasDescription": "Dinas Rutin",
+          "isDinas": true,
+          "lastUpdated": "2025-02-26T06:06:28.599Z",
+          "status": 3
+        }
+      },
+      "unit_kerja": {
+        "alamat": "Jl. Jenderal Sudirman Kav 28, RT.005/RW.002, Kuningan, Karet Semanggi, Kecamatan Setiabudi, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12920",
+        "latitude": -6.2297,
+        "longitude": 106.8197,
+        "nama_unit_kerja": "PT. Maju Jaya Bersama"
+      }
+    },
+    "test(at)test(dot)com": {
+      "attendanceData": {
+        "2025-02-27": {
+          "checkInTime": "2025-02-27T06:11:25.487Z",
+          "isDinas": false,
+          "lastUpdated": "2025-02-27T06:11:25.487Z",
+          "status": 2
+        },
+        "2025-03-04": {
+          "checkInTime": "2025-03-04T06:55:38.194Z",
+          "isDinas": false,
+          "lastUpdated": "2025-03-04T06:55:38.194Z",
+          "status": 2
+        },
+        "2025-03-20": {
+          "checkInTime": "2025-03-20T02:23:06.587Z",
+          "isDinas": false,
+          "lastUpdated": "2025-03-20T02:23:06.587Z",
+          "status": 2
+        },
+        "2025-04-30": {
+          "checkInTime": "2025-04-30T03:01:34.153Z",
+          "isDinas": false,
+          "lastUpdated": "2025-04-30T03:01:34.153Z",
+          "status": 2
+        }
+      },
+      "unit_kerja": {
+        "alamat": "Your Office Address Here",
+        "latitude": -6.872868773290025,
+        "longitude": 107.59036591779108,
+        "nama_unit_kerja": "Your Office Name"
+      }
+    },
+    "test1(at)test(dot)com": {
+      "attendanceData": {
+        "2025-02-25": {
+          "checkInTime": "2025-02-25T06:20:00.786Z",
+          "checkOutTime": "2025-02-25T11:02:00.786Z",
+          "isDinas": false,
+          "lastUpdated": "2025-02-25T06:20:00.786Z",
+          "status": 3
+        },
+        "2025-02-26": {
+          "checkInTime": "2025-02-26T09:20:42.344Z",
+          "checkOutTime": "2025-02-26T09:21:16.290Z",
+          "isDinas": false,
+          "lastUpdated": "2025-02-26T09:21:16.290Z",
+          "status": 3
+        }
+      },
+      "unit_kerja": {
+        "alamat": "Jl. Asia Afrika No.8, RT.1/RW.3, Gelora, Kecamatan Tanah Abang, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10270",
+        "latitude": -6.2189,
+        "longitude": 106.8098,
+        "nama_unit_kerja": "Gedung Kementerian Komunikasi dan Informatika"
+      }
+    }
+  }
+}

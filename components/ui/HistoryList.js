@@ -28,6 +28,7 @@ export default function HistoryList({
 
   return (
     <FlatList
+      showsVerticalScrollIndicator={false}
       style={style}
       data={filteredData}
       keyExtractor={(item) => item.date}

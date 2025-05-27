@@ -84,10 +84,10 @@ export default function History() {
       {/* <Text style={styles.header}>Riwayat Absensi</Text> */}
       {warningShown && (
         <View style={styles.warning}>
-          <View style={{ flex: 1 }}>
+          <View style={{ marginRight: 8 }}>
             <Icon name={"error-warning"} color="rgba(255, 86, 48, 1)"></Icon>
           </View>
-          <View style={{ flex: 9 }}>
+          <View style={{ flex: 1 }}>
             <Text style={{ color: "rgba(255, 86, 48, 1)" }}>
               Anda belum mengisi presensi hari ini, segera isi presensi
             </Text>
@@ -133,7 +133,6 @@ export default function History() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16 },
   warning: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignContent: "center",
@@ -142,7 +141,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(255, 116, 82, 1)",
     borderRadius: 8,
-    maxHeight: "9%",
   },
   dropdownContainer: { flexDirection: "row" },
   header: { fontSize: 18, fontWeight: "600", marginBottom: 12 },

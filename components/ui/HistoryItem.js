@@ -8,7 +8,7 @@ import {
 import Text from "./CustomText";
 import TimelineIndicator from "./TimelineIndicator";
 import { Colors } from "../../constants/styles";
-import { ellipsizeString, getLocalTimeFromISO } from "../../utils/strings";
+import { getLocalTimeFromISO } from "../../utils/strings";
 import Icon from "./CustomIcon";
 
 const HARI = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
@@ -28,7 +28,7 @@ const HistoryItem = ({
   // out
 }) => {
   // date = "2025-01-05";
-  address = ellipsizeString(address, maxLength);
+  // address = ellipsizeString(address, maxLength);
   let status = isDinas ? "Perjalanan Dinas" : "Hadir";
 
   // color = "rgba(82, 189, 148, 1)";
@@ -63,7 +63,9 @@ const HistoryItem = ({
       </View>
       <View style={[styles.box, styles.historyBox]}>
         <RNText style={[styles.statusText, { color }]}>{status}</RNText>
-        <Text style={styles.addressText}>{text}</Text>
+        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.addressText}>
+          {text}
+        </Text>
         <View style={styles.timeBox}>
           <Icon name="check-in" size={12} color="rgba(0, 0, 0, 0.25)" />
           <Text style={styles.timeText}> {checkin_time} -</Text>
@@ -80,24 +82,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   box: {
-    flex: 1,
+    // flex: 1,
     // borderWidth: 1,
     height: 75,
   },
   leftBox: {
-    flex: 1,
+    // flex: 1,
+    // marginRight: 8,
     flexDirection: "row",
+    width: 70,
   },
   dateBox: {
-    flex: 3,
+    // flex: 1,
     justifyContent: "center",
     marginLeft: 8,
+
     // borderWidth: 1,
     // alignItems: "center",
   },
   historyBox: {
     // borderWidth: 1,
-    flex: 4,
+    flex: 1,
     padding: 8,
   },
   lineBox: {

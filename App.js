@@ -1,6 +1,6 @@
 // ui
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { AppState, StyleSheet, Text, View } from "react-native";
 import AppLoading from "expo-app-loading";
 import { Colors } from "./constants/styles";
 import IconButton from "./components/ui/IconButton";
@@ -35,6 +35,8 @@ import {
 } from "./store/authSlice";
 import Icon from "./components/ui/CustomIcon";
 import { refreshIdToken } from "./utils/firebase/auth/authApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ScreenOrientation from "expo-screen-orientation"; // <<< IMPORT THIS
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -205,6 +207,39 @@ function Root() {
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  // ---- START: Screen Orientation Lock useEffect ----
+  useEffect(() => {
+    const lockOrientation = async () => {
+      try {
+        await ScreenOrientation.lockAsync(
+          ScreenOrientation.OrientationLock.PORTRAIT_UP
+        );
+        console.log("Screen orientation locked to PORTRAIT_UP.");
+      } catch (error) {
+        console.warn("Failed to lock screen orientation:", error);
+      }
+    };
+
+    lockOrientation(); // Attempt to lock when the App component mounts
+
+    // Add a listener to re-apply the lock when the app comes to the foreground
+    const subscription = AppState.addEventListener("change", (nextAppState) => {
+      if (nextAppState === "active") {
+        console.log("App is active, re-locking orientation to portrait.");
+        lockOrientation();
+      }
+    });
+
+    // Clean up the subscription when the component unmounts
+    return () => {
+      subscription.remove();
+      // You might consider unlocking if your app ever needs other orientations,
+      // but for an "always portrait" app, this is typically not needed.
+      // ScreenOrientation.unlockAsync();
+    };
+  }, []); // Empty dependency array ensures this runs once on mount and cleans up on unmount
+  // ---- END: Screen Orientation Lock useEffect ----
 
   useEffect(() => {
     const loadFonts = async () => {
