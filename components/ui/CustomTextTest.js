@@ -13,7 +13,7 @@ const CustomTextTest = () => {
         <Text style={{ fontWeight: "100" }}>Weight 100 (Thin)</Text>
         <Text style={{ fontWeight: "200" }}>Weight 200 (ExtraLight)</Text>
         <Text style={{ fontWeight: "300" }}>Weight 300 (Light)</Text>
-        <Text style={{ fontWeight: "400" }}>Weight 400 (Regular)</Text>{" "}
+        <Text style={{ fontWeight: "400" }}>Weight 400 (Regular)</Text>
         {/* Default */}
         <Text style={{ fontWeight: "500" }}>Weight 500 (Medium)</Text>
         <Text style={{ fontWeight: "600" }}>Weight 600 (SemiBold)</Text>
