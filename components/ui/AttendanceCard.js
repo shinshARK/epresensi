@@ -3,7 +3,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import ActionButton from "./ActionButton";
 import { useDispatch, useSelector } from "react-redux";
 
-import useOfficeLocationCheck from "../../utils/hooks/useOfficeLocationCheck";
+import useOfficeLocationCheck, {
+  LocationCheckStatus,
+} from "../../utils/hooks/useOfficeLocationCheck";
 import {
   performAttendanceCheck,
   syncNTPTime,
@@ -25,6 +27,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { store } from "../../store";
 import { setStatus } from "../../store/attendanceSlice";
 import Icon from "./CustomIcon";
+
+import { checkBiometricAvailability } from "../../utils/biometricAuth";
+import * as LocalAuthentication from "expo-local-authentication";
 
 /**
  * AttendanceCard
@@ -74,24 +79,74 @@ export default function AttendanceCard({
   const [dinasDescription, setDinasDescription] = useState("");
   const [isDinas, setIsDinas] = useState(false);
   const [isInRange, setIsInRange] = useState(null);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
-  const { isLocationInOfficeRange, isLocationLoading } =
+  const { isLocationInOfficeRange, isLocationLoading, officeCoordsLoaded } =
     useOfficeLocationCheck(); // Use the hook
+
+  const handleLocationResult = (result) => {
+    const actuallyInRange = result.status === LocationCheckStatus.IN_RANGE;
+    setIsInRange(actuallyInRange);
+
+    // Show alerts for critical issues that aren't just "not in range"
+    // These alerts are now handled by the component calling the hook.
+    if (result.status === LocationCheckStatus.PERMISSION_DENIED) {
+      Alert.alert(
+        "Location Permission Required",
+        result.message ||
+          "Please grant location permission to check attendance."
+      );
+    } else if (result.status === LocationCheckStatus.MOCK_DETECTED) {
+      Alert.alert(
+        "Mock Location Detected",
+        result.message || "Please disable mock location services."
+      );
+    } else if (
+      result.status === LocationCheckStatus.OFFICE_COORDS_MISSING &&
+      officeCoordsLoaded === false
+    ) {
+      // console.log("checking alert");
+      // console.log(officeCoordsLoaded);
+      // Alert.alert(
+      //   "Setup Error",
+      //   result.message || "Office location is not configured."
+      // );
+    } else if (result.status === LocationCheckStatus.LOCATION_ERROR) {
+      Alert.alert(
+        "Location Error",
+        result.message || "Could not retrieve your current location."
+      );
+    } else if (result.status === LocationCheckStatus.MOCK_CHECK_ERROR) {
+      // Alert.alert(
+      //   "Security Check Error",
+      //   result.message || "Could not verify mock location status."
+      // );
+    } else if (result.status === LocationCheckStatus.UNKNOWN_ERROR) {
+      Alert.alert(
+        "Error",
+        result.message || "An unexpected error occurred during location check."
+      );
+    }
+    // For IN_RANGE or NOT_IN_RANGE, we might not need an immediate alert here,
+    // as the handleCheckin logic will use this information.
+  };
 
   const intervalRef = useRef(null);
   useEffect(() => {
     // initial check
     (async () => {
-      const inRange = await isLocationInOfficeRange();
-      setIsInRange(inRange);
+      const result = await isLocationInOfficeRange();
+      handleLocationResult(result);
     })();
 
     // set up interval
     intervalRef.current = setInterval(async () => {
       console.log("Periodic location check running...");
-      const inRange = await isLocationInOfficeRange();
-      console.log(`In range? ${inRange}`);
-      setIsInRange(inRange);
+      const result = await isLocationInOfficeRange();
+      handleLocationResult(result);
+      console.log(
+        `In range? ${result.status === LocationCheckStatus.IN_RANGE}`
+      );
     }, LOCATION_CHECK_INTERVAL_MS);
 
     return () => clearInterval(intervalRef.current);
@@ -110,7 +165,7 @@ export default function AttendanceCard({
       }
     }
     async function effectFunction() {
-      // await registerBackgroundFetchAsync();
+      await registerBackgroundFetchAsync();
       await syncNTPTime();
       await checkBiometricAvailability(); // Call at app startup
     }
@@ -118,6 +173,7 @@ export default function AttendanceCard({
   }, [syncNTPTime]);
 
   const handleCheckin = async (isDinas = false) => {
+    setButtonLoading(true);
     let currentStatus = attendanceStatus;
     if (
       currentStatus === AttendanceStatus.CHECKED_IN ||
@@ -134,6 +190,7 @@ export default function AttendanceCard({
           "Please wait until the end of your shift."
         );
         console.log("not yet time to check out!");
+        setButtonLoading(false);
         return;
       } else if (currentStatus === AttendanceStatus.CHECKED_OUT) {
         // alert not yet time shift to check out
@@ -142,23 +199,28 @@ export default function AttendanceCard({
           "Please wait until your shift starts."
         );
         console.log("not yet time to check in!");
+        setButtonLoading(false);
         return;
       }
     }
-    // setButtonLoading(true);
     console.log(
       `check dinas bypass, isDinas: ${isDinas}, exp: ${
         !isDinas && !isInRange
       } ${!isDinas} ${!isInRange}`
     );
     if (!isDinas && !isInRange) {
-      const recheck = await isLocationInOfficeRange();
-      setIsInRange(recheck);
-      if (!recheck) {
+      const result = await isLocationInOfficeRange();
+      handleLocationResult(result);
+      if (result.status === LocationCheckStatus.MOCK_DETECTED) {
+        setButtonLoading(false);
+        return;
+      }
+      if (result.status === LocationCheckStatus.NOT_IN_RANGE) {
         Alert.alert(
           "You are not in the office range",
           `Please check in/out when you are within ${OFFICE_RADIUS_METERS} meters of the office.`
         );
+        setButtonLoading(false);
         return;
       }
     }
@@ -168,12 +230,12 @@ export default function AttendanceCard({
         const biometricAuthResult =
           await LocalAuthentication.authenticateAsync();
         if (!biometricAuthResult.success) {
-          // setButtonLoading(false); // Stop loading on biometric auth failure
+          setButtonLoading(false); // Stop loading on biometric auth failure
           return; // Early return if biometric auth fails
         }
       } catch (error) {
         console.error("Biometric authentication error:", error);
-        // setButtonLoading(false); // Stop loading on biometric auth error
+        setButtonLoading(false); // Stop loading on biometric auth error
         return;
       }
     }
@@ -184,7 +246,7 @@ export default function AttendanceCard({
     } else if (currentStatus === AttendanceStatus.CHECKING_OUT) {
       newStatus = AttendanceStatus.CHECKED_OUT;
     } else {
-      // setButtonLoading(false);
+      setButtonLoading(false);
       return;
     }
 
@@ -249,9 +311,9 @@ export default function AttendanceCard({
         } else {
           console.warn("User email not found, cannot log attendance.");
         }
-        // setButtonLoading(false);
+        setButtonLoading(false);
       } catch (error) {
-        // setButtonLoading(false);
+        setButtonLoading(false);
         console.error("Error logging attendance data on button press:", error);
       }
     }
@@ -331,6 +393,10 @@ export default function AttendanceCard({
     };
   }
 
+  if (buttonLoading) {
+    primaryProps.text = "Loading...";
+  }
+
   return (
     <>
       <View style={[styles.card, style, { backgroundColor: bgColor }]}>
@@ -348,6 +414,7 @@ export default function AttendanceCard({
 
         <View style={styles.buttonsRow}>
           <ActionButton
+            disabled={buttonLoading}
             // text={primaryAction.text}
             // onPress={handleCheckin}
             // backgroundColor={primaryAction.backgroundColor}

@@ -18,17 +18,18 @@
     "@ruanitto/react-native-ntp-sync": "^1.1.2",
     "axios": "^1.7.9",
     "date-fns": "^4.1.0",
-    "expo": "~53.0.7",
-    "expo-app-loading": "^2.1.1",
+    "expo": "53.0.9",
     "expo-background-fetch": "~13.1.5",
     "expo-checkbox": "~4.1.4",
+    "expo-dev-client": "~5.1.8",
     "expo-device": "~7.1.4",
     "expo-font": "~13.3.1",
     "expo-linear-gradient": "~14.1.4",
     "expo-local-authentication": "~16.0.4",
-    "expo-location": "~18.1.4",
+    "expo-location": "~18.1.5",
     "expo-navigation-bar": "~4.2.4",
     "expo-screen-orientation": "~8.1.6",
+    "expo-splash-screen": "~0.30.8",
     "expo-status-bar": "~2.2.3",
     "expo-system-ui": "~5.0.7",
     "lottie-react-native": "7.2.2",
@@ -41,7 +42,9 @@
     "react-native-turbo-mock-location-detector": "^2.3.1",
     "react-redux": "^9.2.0",
     "redux-devtools-expo-dev-plugin": "^2.0.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "@expo/config-plugins": "~10.0.0",
+    "@expo/prebuild-config": "~9.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

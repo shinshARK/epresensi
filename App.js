@@ -1,54 +1,49 @@
-// ui
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, Alert, AppState } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { AppState, StyleSheet, Text, View, Alert } from "react-native"; // <--- Add Alert
-import AppLoading from "expo-app-loading";
-import { Colors } from "./constants/styles";
-import IconButton from "./components/ui/IconButton";
+import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import * as Device from "expo-device"; // <--- Import expo-device
+import * as Device from "expo-device";
+import * as ScreenOrientation from "expo-screen-orientation";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// icons
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+// Prevent splash from auto-hiding
+SplashScreen.preventAutoHideAsync();
 
-// nav
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-
-// screens
-import Auth from "./screens/Auth";
-import Presensi from "./screens/Presensi";
-import History from "./screens/History";
-import Dashboard from "./screens/Dashboard";
-import Debug from "./screens/Debug";
-
-// react
-import { useCallback, useEffect, useState } from "react";
-
-// redux
+// Redux
 import { Provider, useDispatch, useSelector } from "react-redux";
-import { resetAllStates, store } from "./store";
+import { store, resetAllStates } from "./store";
 import {
   logout as logoutAction,
   fetchStoredToken,
   setAuthToken,
 } from "./store/authSlice";
+
+// Navigation
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+// Screens & UI
+import Auth from "./screens/Auth";
+import Presensi from "./screens/Presensi";
+import History from "./screens/History";
+import Dashboard from "./screens/Dashboard";
+import Debug from "./screens/Debug";
+import IconButton from "./components/ui/IconButton";
 import Icon from "./components/ui/CustomIcon";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Colors } from "./constants/styles";
+
+// Firebase utils
 import { refreshIdToken } from "./utils/firebase/auth/authApi";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as ScreenOrientation from "expo-screen-orientation";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
 function AuthStack() {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Auth" component={Auth} />
     </Stack.Navigator>
   );
@@ -63,13 +58,11 @@ function AttendanceBottomTabs() {
 
   return (
     <BottomTabs.Navigator
-      screenOptions={({}) => ({
-        tabBarActiveTintColor: "rgba(0, 0, 0, 0.75)",
-        tabBarInactiveTintColor: "rgba(0, 0, 0, 0.50)",
-        sceneStyle: {
-          backgroundColor: "white",
-        },
-      })}
+      screenOptions={{
+        tabBarActiveTintColor: "rgba(0,0,0,0.75)",
+        tabBarInactiveTintColor: "rgba(0,0,0,0.5)",
+        sceneStyle: { backgroundColor: "white" },
+      }}
     >
       <BottomTabs.Screen
         name="Presensi"
@@ -78,10 +71,7 @@ function AttendanceBottomTabs() {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home-line" color={color} size={size} />
           ),
-          headerStyle: {
-            backgroundColor: Colors.primary300,
-            height: 60,
-          },
+          headerStyle: { backgroundColor: Colors.primary300, height: 60 },
           headerShadowVisible: false,
           headerTitle: "",
         }}
@@ -127,10 +117,8 @@ function AuthenticatedStack() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: Colors.primary500 },
-        headerTintColor: "white",
-        contentStyle: { backgroundColor: Colors.primary100 },
         headerShown: false,
+        contentStyle: { backgroundColor: Colors.primary100 },
       }}
     >
       <Stack.Screen name="AttendanceTabs" component={AttendanceBottomTabs} />
@@ -140,117 +128,86 @@ function AuthenticatedStack() {
 
 function Navigation() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  console.log(`is authenticated? ${isAuthenticated}`);
   return (
     <NavigationContainer>
-      {!isAuthenticated && <AuthStack />}
-      {isAuthenticated && <AuthenticatedStack />}
+      {isAuthenticated ? <AuthenticatedStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
 
-function Root() {
+function AppContent() {
   const [isTryingLogin, setIsTryingLogin] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const refreshTokenInterval = setInterval(async () => {
-      const storedRefreshToken = await AsyncStorage.getItem("refreshToken");
-      if (storedRefreshToken) {
-        const { idToken: newToken, refreshToken: newRefresh } =
-          await refreshIdToken(storedRefreshToken);
-        await AsyncStorage.setItem("token", newToken);
-        await AsyncStorage.setItem("refreshToken", newRefresh);
-        dispatch(setAuthToken(newToken));
+    dispatch(fetchStoredToken()).then(() => setIsTryingLogin(false));
+
+    const interval = setInterval(async () => {
+      const storedRefresh = await AsyncStorage.getItem("refreshToken");
+      if (storedRefresh) {
+        const { idToken, refreshToken } = await refreshIdToken(storedRefresh);
+        await AsyncStorage.setItem("token", idToken);
+        await AsyncStorage.setItem("refreshToken", refreshToken);
+        dispatch(setAuthToken(idToken));
       }
-    }, 50 * 60 * 1000); // every 50 minutes
+    }, 50 * 60 * 1000);
 
-    return () => clearInterval(refreshTokenInterval);
-  }, [dispatch]); // <--- Added dispatch to dependency array for consistency
-
-  useEffect(() => {
-    dispatch(fetchStoredToken()).then(() => {
-      setIsTryingLogin(false);
-    });
+    return () => clearInterval(interval);
   }, [dispatch]);
 
-  if (isTryingLogin) {
-    return <AppLoading />;
-  }
-
+  if (isTryingLogin) return null;
   return <Navigation />;
 }
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-  const [isDeviceSecure, setIsDeviceSecure] = useState(null); // null: checking, true: secure, false: compromised
+  const [isDeviceSecure, setIsDeviceSecure] = useState(null);
 
-  // ---- START: Root/Jailbreak Check useEffect ----
+  // Device security check
   useEffect(() => {
-    const checkDeviceSecurity = async () => {
+    (async () => {
       try {
-        const isRooted = await Device.isRootedExperimentalAsync();
-        if (isRooted) {
-          console.warn("Device is rooted/jailbroken.");
+        const rooted = await Device.isRootedExperimentalAsync();
+        if (rooted) {
           Alert.alert(
             "Device Compromised",
-            "This application cannot run on a rooted or jailbroken device for security reasons. Please use a secure device.",
-            [{ text: "OK", onPress: () => {} }] // You might want to exit the app here: BackHandler.exitApp() on Android
-            // or prevent further navigation.
+            "This application cannot run on a rooted or jailbroken device for security reasons."
           );
           setIsDeviceSecure(false);
-          // Depending on your app's policy, you might want to:
-          // 1. Prevent rendering the rest of the app.
-          // 2. Log this event to your server.
-          // 3. For Android, you could use `BackHandler.exitApp();` after the alert.
         } else {
-          console.log("Device is not rooted/jailbroken.");
           setIsDeviceSecure(true);
         }
-      } catch (error) {
-        console.error("Failed to check device security:", error);
+      } catch (e) {
         Alert.alert(
           "Security Check Failed",
-          "Could not verify device security. For your protection, some features might be limited or the app may not run correctly."
+          "Could not verify device security. Some features may be limited."
         );
-        setIsDeviceSecure(false); // Treat as compromised if check fails
+        setIsDeviceSecure(false);
       }
-    };
+    })();
+  }, []);
 
-    checkDeviceSecurity();
-  }, []); // Empty dependency array: run once on mount
-  // ---- END: Root/Jailbreak Check useEffect ----
-
-  // ---- START: Screen Orientation Lock useEffect ----
+  // Lock orientation
   useEffect(() => {
-    const lockOrientation = async () => {
+    const lock = async () => {
       try {
         await ScreenOrientation.lockAsync(
           ScreenOrientation.OrientationLock.PORTRAIT_UP
         );
-        console.log("Screen orientation locked to PORTRAIT_UP.");
-      } catch (error) {
-        console.warn("Failed to lock screen orientation:", error);
+      } catch (e) {
+        console.warn("Failed to lock orientation:", e);
       }
     };
-
-    lockOrientation();
-
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if (nextAppState === "active") {
-        console.log("App is active, re-locking orientation to portrait.");
-        lockOrientation();
-      }
+    lock();
+    const sub = AppState.addEventListener("change", (state) => {
+      if (state === "active") lock();
     });
-
-    return () => {
-      subscription.remove();
-    };
+    return () => sub.remove();
   }, []);
-  // ---- END: Screen Orientation Lock useEffect ----
 
+  // Load fonts
   useEffect(() => {
-    const loadFonts = async () => {
+    (async () => {
       await Font.loadAsync({
         "Inter-Black": require("./assets/fonts/Inter/Inter-Black.ttf"),
         "Inter-BlackItalic": require("./assets/fonts/Inter/Inter-BlackItalic.ttf"),
@@ -272,21 +229,21 @@ export default function App() {
         "Inter-ThinItalic": require("./assets/fonts/Inter/Inter-ThinItalic.ttf"),
       });
       setFontsLoaded(true);
-    };
-
-    loadFonts();
+    })();
   }, []);
 
+  // Hide splash when ready
+  useEffect(() => {
+    if (fontsLoaded && isDeviceSecure !== null) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, isDeviceSecure]);
+
   if (!fontsLoaded || isDeviceSecure === null) {
-    // <--- Also wait for device security check
-    return <AppLoading />;
+    return null;
   }
 
   if (isDeviceSecure === false) {
-    // Optionally, render a specific "Device Compromised" screen instead of AppLoading or null
-    // For now, AppLoading will show until the alert is dismissed, then it might show a blank screen
-    // or the app might crash depending on how you handle navigation after the alert.
-    // A dedicated screen is a better user experience.
     return (
       <View
         style={{
@@ -296,7 +253,7 @@ export default function App() {
           padding: 20,
         }}
       >
-        <Text style={{ textAlign: "center", fontSize: 16, color: "red" }}>
+        <Text style={{ color: "red", textAlign: "center", fontSize: 16 }}>
           This application cannot run on a rooted or jailbroken device for
           security reasons.
         </Text>
@@ -308,7 +265,7 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <Provider store={store}>
-        <Root />
+        <AppContent />
       </Provider>
     </>
   );

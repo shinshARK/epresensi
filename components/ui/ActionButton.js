@@ -22,11 +22,13 @@ export default function ActionButton({
   backgroundColor,
   textColor,
   isSecondary = false,
+  disabled = false,
   style = {},
   textStyle = {},
 }) {
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[
         styles.button,
         isSecondary && styles.secondaryButton,
