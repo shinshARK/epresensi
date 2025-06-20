@@ -70,7 +70,7 @@ export const performAttendanceCheck = async () => {
       newStatus = AttendanceStatus.CHECKING_IN;
     } else if (
       currentStatus === AttendanceStatus.CHECKED_IN &&
-      hour >= 9 &&
+      hour >= 17 &&
       hour < 20
     ) {
       newStatus = AttendanceStatus.CHECKING_OUT;
