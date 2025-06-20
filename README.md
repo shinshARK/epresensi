@@ -86,7 +86,7 @@ Untuk menjalankan proyek ini di lingkungan pengembangan lokal, ikuti langkah-lan
 
 1.  **Clone repositori ini**
     ```bash
-    git clone [https://github.com/shinshARK/epresensi.git](https://github.com/shinshARK/epresensi.git)
+    git clone https://github.com/shinshARK/epresensi.git
     cd epresensi
     ```
 
