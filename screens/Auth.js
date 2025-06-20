@@ -63,7 +63,7 @@ const Auth = () => {
             "The email address provided is invalid or not supported. Please check the format and try again.";
           break;
         case "EMAIL_NOT_FOUND": // If your backend sends a more specific code for this
-        case "INVALID_PASSWORD":
+        case "INVALID_LOGIN_CREDENTIALS":
           alertMessage = "Invalid credentials, wrong email or password";
           break;
         case "USER_DISABLED":
@@ -189,7 +189,7 @@ const Auth = () => {
         <View style={styles.half}>
           <View style={styles.logoContainer}>
             <Image
-              source={require("../assets/logo_fixed.png")}
+              // source={require("../assets/logo_fixed.png")}
               style={styles.logo}
             />
           </View>
