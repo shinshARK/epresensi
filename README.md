@@ -53,10 +53,10 @@ Berikut adalah beberapa tampilan dari antarmuka pengguna aplikasi.
  <tr>
     <td>
       <!-- Paste gambar Anda di GitHub, lalu salin URL-nya ke src di bawah ini -->
-      <img src="https://placehold.co/400x800/EEE/31343C?text=Paste+Gambar+Login+di+Sini" alt="Layar Login" width="300"/>
+      <img src="https://github.com/user-attachments/assets/84828c04-ff2a-4375-8bac-7160809b1701" alt="Layar Login" width="300"/>
     </td>
     <td>
-      <img src="https://placehold.co/400x800/EEE/31343C?text=Paste+Gambar+Utama+di+Sini" alt="Layar Utama" width="300"/>
+      <img src="https://github.com/user-attachments/assets/da0d3ba5-9eda-49de-91ae-ad474fd2b640" alt="Layar Utama" width="300"/>
     </td>
  </tr>
  <tr>
@@ -65,10 +65,10 @@ Berikut adalah beberapa tampilan dari antarmuka pengguna aplikasi.
  </tr>
   <tr>
     <td>
-      <img src="https://placehold.co/400x800/EEE/31343C?text=Paste+Gambar+Modal+di+Sini" alt="Modal Dinas" width="300"/>
+      <img src="https://github.com/user-attachments/assets/dcb38e43-359c-4145-ac18-ff4e74fbc40e" alt="Modal Dinas" width="300"/>
     </td>
     <td>
-      <img src="https://placehold.co/400x800/EEE/31343C?text=Paste+Gambar+Riwayat+di+Sini" alt="Halaman Riwayat" width="300"/>
+      <img src="https://github.com/user-attachments/assets/78699dd3-efcb-4aa8-b299-a3801253196d" alt="Halaman Riwayat" width="300"/>
     </td>
  </tr>
 </table>
